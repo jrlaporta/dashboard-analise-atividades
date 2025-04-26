@@ -46,13 +46,14 @@ try:
         fig_prod = px.bar(produtividade_tecnico, x='Técnico', y='Total Atividades', 
                          text=produtividade_tecnico.apply(lambda row: f"{row['Total Atividades']} ({row['%']:.1f}%)", axis=1), 
                          title='Produtividade Total por Técnico')
-        fig_prod.update_traces(textposition='outside', textfont=dict(size=16))
+        fig_prod.update_traces(textposition='outside', textfont=dict(size=24))
         fig_prod.update_layout(
             xaxis_title="Técnico", 
             yaxis_title="Total de Atividades",
-            xaxis=dict(tickfont=dict(size=10)),
-            yaxis=dict(tickfont=dict(size=10)),
-            title_font=dict(size=20)
+            xaxis=dict(tickfont=dict(size=8)),
+            yaxis=dict(tickfont=dict(size=8)),
+            title_font=dict(size=22),
+            height=600
         )
         st.plotly_chart(fig_prod, use_container_width=True)
 
@@ -69,15 +70,16 @@ try:
                                text=sem_sinal_count.apply(lambda row: f"{row['Total']} ({row['%']:.1f}%)", axis=1),
                                barmode='group',
                                title='SEM SINAL NO PRAZO por Técnico')
-        fig_sem_sinal.update_traces(textposition='outside', textfont=dict(size=16))
+        fig_sem_sinal.update_traces(textposition='outside', textfont=dict(size=24))
         fig_sem_sinal.update_layout(
             xaxis_title="Técnico", 
             yaxis_title="Total",
             legend_title_text='SEM SINAL NO PRAZO',
-            xaxis=dict(tickfont=dict(size=10)),
-            yaxis=dict(tickfont=dict(size=10)),
-            legend=dict(font=dict(size=12)),
-            title_font=dict(size=20)
+            xaxis=dict(tickfont=dict(size=8)),
+            yaxis=dict(tickfont=dict(size=8)),
+            legend=dict(font=dict(size=14)),
+            title_font=dict(size=22),
+            height=600
         )
         st.plotly_chart(fig_sem_sinal, use_container_width=True)
 
@@ -94,15 +96,16 @@ try:
                                 text=degradacao_count.apply(lambda row: f"{row['Total']} ({row['%']:.1f}%)", axis=1),
                                 barmode='group',
                                 title='DEGRADAÇÃO NO PRAZO por Técnico')
-        fig_degradacao.update_traces(textposition='outside', textfont=dict(size=16))
+        fig_degradacao.update_traces(textposition='outside', textfont=dict(size=24))
         fig_degradacao.update_layout(
             xaxis_title="Técnico", 
             yaxis_title="Total",
             legend_title_text='DEGRADAÇÃO NO PRAZO',
-            xaxis=dict(tickfont=dict(size=10)),
-            yaxis=dict(tickfont=dict(size=10)),
-            legend=dict(font=dict(size=12)),
-            title_font=dict(size=20)
+            xaxis=dict(tickfont=dict(size=8)),
+            yaxis=dict(tickfont=dict(size=8)),
+            legend=dict(font=dict(size=14)),
+            title_font=dict(size=22),
+            height=600
         )
         st.plotly_chart(fig_degradacao, use_container_width=True)
     # --- FIM: Análises relacionadas a TÉCNICO ---
@@ -119,13 +122,14 @@ try:
         fig5 = px.bar(contagem_equipamento_top, x='Equipamento', y='Total Atividades',
                       text='Total Atividades',
                       title=f'Top {top_n} Equipamentos Mais Frequentes')
-        fig5.update_traces(textposition='outside', textfont=dict(size=16))
+        fig5.update_traces(textposition='outside', textfont=dict(size=24))
         fig5.update_layout(
             xaxis_title="Equipamento", 
             yaxis_title="Número de Atividades",
-            xaxis=dict(tickfont=dict(size=10)),
-            yaxis=dict(tickfont=dict(size=10)),
-            title_font=dict(size=20)
+            xaxis=dict(tickfont=dict(size=8)),
+            yaxis=dict(tickfont=dict(size=8)),
+            title_font=dict(size=22),
+            height=600
         )
         st.plotly_chart(fig5, use_container_width=True)
 
@@ -142,13 +146,14 @@ try:
                     fig6 = px.bar(contagem_causas_top, x='Resolução Causa 1', y='Total',
                                   text='Total',
                                   title=f'Top {top_causas_n} Resoluções para {equipamento}')
-                    fig6.update_traces(textposition='outside', textfont=dict(size=16))
+                    fig6.update_traces(textposition='outside', textfont=dict(size=24))
                     fig6.update_layout(
                         xaxis_title="Resolução Causa 1", 
                         yaxis_title="Número de Ocorrências",
-                        xaxis=dict(tickfont=dict(size=10)),
-                        yaxis=dict(tickfont=dict(size=10)),
-                        title_font=dict(size=20)
+                        xaxis=dict(tickfont=dict(size=8)),
+                        yaxis=dict(tickfont=dict(size=8)),
+                        title_font=dict(size=22),
+                        height=600
                     )
                     st.plotly_chart(fig6, use_container_width=True)
                 else:
