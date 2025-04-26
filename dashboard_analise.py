@@ -13,8 +13,8 @@ uploaded_file = st.sidebar.file_uploader("Escolha um arquivo Excel", type="xlsx"
 if uploaded_file is not None:
     try:
         df = pd.read_excel(uploaded_file)
-        st.write("Colunas do arquivo:", df.columns.tolist())
-        st.dataframe(df.head())
+        # st.write("Colunas do arquivo:", df.columns.tolist())
+        # st.dataframe(df.head())
         df_final_geral = df.copy()  # ou seu processamento customizado
 
         # Análise de Equipamentos e Causas
