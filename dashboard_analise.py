@@ -52,6 +52,51 @@ if uploaded_file is not None:
                         st.write(f"Não há informações de 'Resolução Causa 1' para '{equipamento}' com os filtros atuais.")
         else:
             st.warning("O arquivo não possui as colunas necessárias: 'Equipamento' e 'Categorização de Resolução 1'.")
+
+        # 1. Produtividade total de cada técnico
+        if 'TÉCNICO' in df_final_geral.columns:
+            st.subheader("Produtividade Total por Técnico")
+            produtividade_tecnico = df_final_geral['TÉCNICO'].value_counts().reset_index()
+            produtividade_tecnico.columns = ['Técnico', 'Total Atividades']
+            produtividade_tecnico['%'] = 100 * produtividade_tecnico['Total Atividades'] / produtividade_tecnico['Total Atividades'].sum()
+            fig_prod = px.bar(produtividade_tecnico, x='Técnico', y='Total Atividades', text=produtividade_tecnico.apply(lambda row: f"{row['Total Atividades']} ({row['%']:.1f}%)", axis=1), title='Produtividade Total por Técnico')
+            fig_prod.update_traces(textposition='outside')
+            fig_prod.update_layout(xaxis_title="Técnico", yaxis_title="Total de Atividades")
+            st.plotly_chart(fig_prod, use_container_width=True)
+
+        # 2. SEM SINAL NO PRAZO por técnico
+        if 'TÉCNICO' in df_final_geral.columns and 'SEM SINAL NO PRAZO ' in df_final_geral.columns:
+            st.subheader('SEM SINAL NO PRAZO por Técnico')
+            sem_sinal = df_final_geral[['TÉCNICO', 'SEM SINAL NO PRAZO ']].dropna()
+            sem_sinal = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '].str.strip() != '']
+            sem_sinal_count = sem_sinal.groupby(['TÉCNICO', 'SEM SINAL NO PRAZO ']).size().reset_index(name='Total')
+            total_por_tecnico = sem_sinal.groupby('TÉCNICO').size().reset_index(name='Total Técnico')
+            sem_sinal_count = sem_sinal_count.merge(total_por_tecnico, on='TÉCNICO')
+            sem_sinal_count['%'] = 100 * sem_sinal_count['Total'] / sem_sinal_count['Total Técnico']
+            fig_sem_sinal = px.bar(sem_sinal_count, x='TÉCNICO', y='Total', color='SEM SINAL NO PRAZO ',
+                                   text=sem_sinal_count.apply(lambda row: f"{row['Total']} ({row['%']:.1f}%)", axis=1),
+                                   barmode='group',
+                                   title='SEM SINAL NO PRAZO por Técnico')
+            fig_sem_sinal.update_traces(textposition='outside')
+            fig_sem_sinal.update_layout(xaxis_title="Técnico", yaxis_title="Total", legend_title_text='SEM SINAL NO PRAZO')
+            st.plotly_chart(fig_sem_sinal, use_container_width=True)
+
+        # 3. DEGRADAÇÃO NO PRAZO por técnico
+        if 'TÉCNICO' in df_final_geral.columns and 'DEGRADAÇÃO NO PRAZO ' in df_final_geral.columns:
+            st.subheader('DEGRADAÇÃO NO PRAZO por Técnico')
+            degradacao = df_final_geral[['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']].dropna()
+            degradacao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '].str.strip() != '']
+            degradacao_count = degradacao.groupby(['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']).size().reset_index(name='Total')
+            total_por_tecnico_deg = degradacao.groupby('TÉCNICO').size().reset_index(name='Total Técnico')
+            degradacao_count = degradacao_count.merge(total_por_tecnico_deg, on='TÉCNICO')
+            degradacao_count['%'] = 100 * degradacao_count['Total'] / degradacao_count['Total Técnico']
+            fig_degradacao = px.bar(degradacao_count, x='TÉCNICO', y='Total', color='DEGRADAÇÃO NO PRAZO ',
+                                    text=degradacao_count.apply(lambda row: f"{row['Total']} ({row['%']:.1f}%)", axis=1),
+                                    barmode='group',
+                                    title='DEGRADAÇÃO NO PRAZO por Técnico')
+            fig_degradacao.update_traces(textposition='outside')
+            fig_degradacao.update_layout(xaxis_title="Técnico", yaxis_title="Total", legend_title_text='DEGRADAÇÃO NO PRAZO')
+            st.plotly_chart(fig_degradacao, use_container_width=True)
     except Exception as e:
         st.error(f"Erro ao ler o arquivo Excel: {e}")
         st.stop()
