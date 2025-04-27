@@ -81,13 +81,13 @@ try:
         sem_sinal_sim_count = sem_sinal_sim_count.merge(total_por_tecnico, on='TÉCNICO')
         sem_sinal_sim_count['% Sim'] = 100 * sem_sinal_sim_count['Total Sim'] / sem_sinal_sim_count['Total Atividades']
         
-        fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total Sim',
-                                  text=sem_sinal_sim_count.apply(lambda row: f"{row['Total Sim']} ({row['% Sim']:.1f}%)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Respostas "Sim"')
+        fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total Atividades',
+                                  text=sem_sinal_sim_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                  title='SEM SINAL NO PRAZO - Total de Atividades com % de "Sim"')
         fig_sem_sinal_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_sem_sinal_sim.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Respostas 'Sim'",
+            yaxis_title="Total de Atividades",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -101,13 +101,13 @@ try:
         sem_sinal_nao_count = sem_sinal_nao_count.merge(total_por_tecnico, on='TÉCNICO')
         sem_sinal_nao_count['% Não'] = 100 * sem_sinal_nao_count['Total Não'] / sem_sinal_nao_count['Total Atividades']
         
-        fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total Não',
-                                  text=sem_sinal_nao_count.apply(lambda row: f"{row['Total Não']} ({row['% Não']:.1f}%)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Respostas "Não"')
+        fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total Atividades',
+                                  text=sem_sinal_nao_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Não']:.1f}% Não)", axis=1),
+                                  title='SEM SINAL NO PRAZO - Total de Atividades com % de "Não"')
         fig_sem_sinal_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_sem_sinal_nao.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Respostas 'Não'",
+            yaxis_title="Total de Atividades",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -131,13 +131,13 @@ try:
         degradacao_sim_count = degradacao_sim_count.merge(total_por_tecnico, on='TÉCNICO')
         degradacao_sim_count['% Sim'] = 100 * degradacao_sim_count['Total Sim'] / degradacao_sim_count['Total Atividades']
         
-        fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total Sim',
-                                   text=degradacao_sim_count.apply(lambda row: f"{row['Total Sim']} ({row['% Sim']:.1f}%)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Respostas "Sim"')
+        fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total Atividades',
+                                   text=degradacao_sim_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                   title='DEGRADAÇÃO NO PRAZO - Total de Atividades com % de "Sim"')
         fig_degradacao_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_degradacao_sim.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Respostas 'Sim'",
+            yaxis_title="Total de Atividades",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -151,13 +151,13 @@ try:
         degradacao_nao_count = degradacao_nao_count.merge(total_por_tecnico, on='TÉCNICO')
         degradacao_nao_count['% Não'] = 100 * degradacao_nao_count['Total Não'] / degradacao_nao_count['Total Atividades']
         
-        fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total Não',
-                                   text=degradacao_nao_count.apply(lambda row: f"{row['Total Não']} ({row['% Não']:.1f}%)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Respostas "Não"')
+        fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total Atividades',
+                                   text=degradacao_nao_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Não']:.1f}% Não)", axis=1),
+                                   title='DEGRADAÇÃO NO PRAZO - Total de Atividades com % de "Não"')
         fig_degradacao_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_degradacao_nao.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Respostas 'Não'",
+            yaxis_title="Total de Atividades",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
