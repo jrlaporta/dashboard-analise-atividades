@@ -66,106 +66,120 @@ try:
         st.plotly_chart(fig_prod, use_container_width=True)
 
     # 2. SEM SINAL NO PRAZO por técnico
-    if 'TÉCNICO' in df_final_geral.columns and 'SEM SINAL NO PRAZO ' in df_final_geral.columns and 'I Sintoma' in df_final_geral.columns:
+    if 'TÉCNICO' in df_final_geral.columns and 'SEM SINAL NO PRAZO ' in df_final_geral.columns:
         st.subheader('SEM SINAL NO PRAZO por Técnico')
-        # Primeiro filtrar por Sem Sinal na coluna I Sintoma
-        sem_sinal_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Sem Sinal', case=False, na=False)]
-        sem_sinal = sem_sinal_total[['TÉCNICO', 'SEM SINAL NO PRAZO ']].dropna()
-        sem_sinal = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '].str.strip() != '']
-        
-        # Calcular totais por técnico (total de Sem Sinal)
-        total_por_tecnico = sem_sinal.groupby('TÉCNICO').size().reset_index(name='Total SEM SINAL')
-        
-        # Gráfico para respostas "Sim"
-        sem_sinal_sim = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Sim']
-        sem_sinal_sim_count = sem_sinal_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
-        sem_sinal_sim_count = sem_sinal_sim_count.merge(total_por_tecnico, on='TÉCNICO')
-        sem_sinal_sim_count['% Sim'] = 100 * sem_sinal_sim_count['Total Sim'] / sem_sinal_sim_count['Total SEM SINAL']
-        
-        fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total SEM SINAL',
-                                  text=sem_sinal_sim_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Sim']:.1f}% Sim)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Sim"')
-        fig_sem_sinal_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
-        fig_sem_sinal_sim.update_layout(
-            xaxis_title="Técnico", 
-            yaxis_title="Total de Ocorrências SEM SINAL",
-            xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            title_font=dict(size=TITULO_TAMANHO),
-            height=ALTURA_GRAFICO
-        )
-        st.plotly_chart(fig_sem_sinal_sim, use_container_width=True)
-        
-        # Gráfico para respostas "Não"
-        sem_sinal_nao = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Não']
-        sem_sinal_nao_count = sem_sinal_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
-        sem_sinal_nao_count = sem_sinal_nao_count.merge(total_por_tecnico, on='TÉCNICO')
-        sem_sinal_nao_count['% Não'] = 100 * sem_sinal_nao_count['Total Não'] / sem_sinal_nao_count['Total SEM SINAL']
-        
-        fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total SEM SINAL',
-                                  text=sem_sinal_nao_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Não']:.1f}% Não)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Não"')
-        fig_sem_sinal_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
-        fig_sem_sinal_nao.update_layout(
-            xaxis_title="Técnico", 
-            yaxis_title="Total de Ocorrências SEM SINAL",
-            xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            title_font=dict(size=TITULO_TAMANHO),
-            height=ALTURA_GRAFICO
-        )
-        st.plotly_chart(fig_sem_sinal_nao, use_container_width=True)
+        try:
+            # Primeiro filtrar por Sem Sinal na coluna I Sintoma
+            if 'I Sintoma' in df_final_geral.columns:
+                sem_sinal_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Sem Sinal', case=False, na=False)]
+            else:
+                sem_sinal_total = df_final_geral[df_final_geral['Sintoma'].str.contains('Sem Sinal', case=False, na=False)]
+            
+            sem_sinal = sem_sinal_total[['TÉCNICO', 'SEM SINAL NO PRAZO ']].dropna()
+            sem_sinal = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '].str.strip() != '']
+            
+            # Calcular totais por técnico (total de Sem Sinal)
+            total_por_tecnico = sem_sinal.groupby('TÉCNICO').size().reset_index(name='Total SEM SINAL')
+            
+            # Gráfico para respostas "Sim"
+            sem_sinal_sim = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Sim']
+            sem_sinal_sim_count = sem_sinal_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
+            sem_sinal_sim_count = sem_sinal_sim_count.merge(total_por_tecnico, on='TÉCNICO')
+            sem_sinal_sim_count['% Sim'] = 100 * sem_sinal_sim_count['Total Sim'] / sem_sinal_sim_count['Total SEM SINAL']
+            
+            fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total SEM SINAL',
+                                      text=sem_sinal_sim_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                      title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Sim"')
+            fig_sem_sinal_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
+            fig_sem_sinal_sim.update_layout(
+                xaxis_title="Técnico", 
+                yaxis_title="Total de Ocorrências SEM SINAL",
+                xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                title_font=dict(size=TITULO_TAMANHO),
+                height=ALTURA_GRAFICO
+            )
+            st.plotly_chart(fig_sem_sinal_sim, use_container_width=True)
+            
+            # Gráfico para respostas "Não"
+            sem_sinal_nao = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Não']
+            sem_sinal_nao_count = sem_sinal_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
+            sem_sinal_nao_count = sem_sinal_nao_count.merge(total_por_tecnico, on='TÉCNICO')
+            sem_sinal_nao_count['% Não'] = 100 * sem_sinal_nao_count['Total Não'] / sem_sinal_nao_count['Total SEM SINAL']
+            
+            fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total SEM SINAL',
+                                      text=sem_sinal_nao_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Não']:.1f}% Não)", axis=1),
+                                      title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Não"')
+            fig_sem_sinal_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
+            fig_sem_sinal_nao.update_layout(
+                xaxis_title="Técnico", 
+                yaxis_title="Total de Ocorrências SEM SINAL",
+                xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                title_font=dict(size=TITULO_TAMANHO),
+                height=ALTURA_GRAFICO
+            )
+            st.plotly_chart(fig_sem_sinal_nao, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Não foi possível gerar os gráficos de SEM SINAL NO PRAZO: {str(e)}")
 
     # 3. DEGRADAÇÃO NO PRAZO por técnico
-    if 'TÉCNICO' in df_final_geral.columns and 'DEGRADAÇÃO NO PRAZO ' in df_final_geral.columns and 'I Sintoma' in df_final_geral.columns:
+    if 'TÉCNICO' in df_final_geral.columns and 'DEGRADAÇÃO NO PRAZO ' in df_final_geral.columns:
         st.subheader('DEGRADAÇÃO NO PRAZO por Técnico')
-        # Primeiro filtrar por Degradação na coluna I Sintoma
-        degradacao_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Degradação', case=False, na=False)]
-        degradacao = degradacao_total[['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']].dropna()
-        degradacao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '].str.strip() != '']
-        
-        # Calcular totais por técnico (total de Degradação)
-        total_por_tecnico = degradacao.groupby('TÉCNICO').size().reset_index(name='Total DEGRADAÇÃO')
-        
-        # Gráfico para respostas "Sim"
-        degradacao_sim = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Sim']
-        degradacao_sim_count = degradacao_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
-        degradacao_sim_count = degradacao_sim_count.merge(total_por_tecnico, on='TÉCNICO')
-        degradacao_sim_count['% Sim'] = 100 * degradacao_sim_count['Total Sim'] / degradacao_sim_count['Total DEGRADAÇÃO']
-        
-        fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
-                                   text=degradacao_sim_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Sim']:.1f}% Sim)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Sim"')
-        fig_degradacao_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
-        fig_degradacao_sim.update_layout(
-            xaxis_title="Técnico", 
-            yaxis_title="Total de Ocorrências DEGRADAÇÃO",
-            xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            title_font=dict(size=TITULO_TAMANHO),
-            height=ALTURA_GRAFICO
-        )
-        st.plotly_chart(fig_degradacao_sim, use_container_width=True)
-        
-        # Gráfico para respostas "Não"
-        degradacao_nao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Não']
-        degradacao_nao_count = degradacao_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
-        degradacao_nao_count = degradacao_nao_count.merge(total_por_tecnico, on='TÉCNICO')
-        degradacao_nao_count['% Não'] = 100 * degradacao_nao_count['Total Não'] / degradacao_nao_count['Total DEGRADAÇÃO']
-        
-        fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
-                                   text=degradacao_nao_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Não']:.1f}% Não)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Não"')
-        fig_degradacao_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
-        fig_degradacao_nao.update_layout(
-            xaxis_title="Técnico", 
-            yaxis_title="Total de Ocorrências DEGRADAÇÃO",
-            xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
-            title_font=dict(size=TITULO_TAMANHO),
-            height=ALTURA_GRAFICO
-        )
-        st.plotly_chart(fig_degradacao_nao, use_container_width=True)
+        try:
+            # Primeiro filtrar por Degradação na coluna I Sintoma
+            if 'I Sintoma' in df_final_geral.columns:
+                degradacao_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Degradação', case=False, na=False)]
+            else:
+                degradacao_total = df_final_geral[df_final_geral['Sintoma'].str.contains('Degradação', case=False, na=False)]
+            
+            degradacao = degradacao_total[['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']].dropna()
+            degradacao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '].str.strip() != '']
+            
+            # Calcular totais por técnico (total de Degradação)
+            total_por_tecnico = degradacao.groupby('TÉCNICO').size().reset_index(name='Total DEGRADAÇÃO')
+            
+            # Gráfico para respostas "Sim"
+            degradacao_sim = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Sim']
+            degradacao_sim_count = degradacao_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
+            degradacao_sim_count = degradacao_sim_count.merge(total_por_tecnico, on='TÉCNICO')
+            degradacao_sim_count['% Sim'] = 100 * degradacao_sim_count['Total Sim'] / degradacao_sim_count['Total DEGRADAÇÃO']
+            
+            fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
+                                       text=degradacao_sim_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                       title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Sim"')
+            fig_degradacao_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
+            fig_degradacao_sim.update_layout(
+                xaxis_title="Técnico", 
+                yaxis_title="Total de Ocorrências DEGRADAÇÃO",
+                xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                title_font=dict(size=TITULO_TAMANHO),
+                height=ALTURA_GRAFICO
+            )
+            st.plotly_chart(fig_degradacao_sim, use_container_width=True)
+            
+            # Gráfico para respostas "Não"
+            degradacao_nao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Não']
+            degradacao_nao_count = degradacao_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
+            degradacao_nao_count = degradacao_nao_count.merge(total_por_tecnico, on='TÉCNICO')
+            degradacao_nao_count['% Não'] = 100 * degradacao_nao_count['Total Não'] / degradacao_nao_count['Total DEGRADAÇÃO']
+            
+            fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
+                                       text=degradacao_nao_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Não']:.1f}% Não)", axis=1),
+                                       title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Não"')
+            fig_degradacao_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
+            fig_degradacao_nao.update_layout(
+                xaxis_title="Técnico", 
+                yaxis_title="Total de Ocorrências DEGRADAÇÃO",
+                xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
+                title_font=dict(size=TITULO_TAMANHO),
+                height=ALTURA_GRAFICO
+            )
+            st.plotly_chart(fig_degradacao_nao, use_container_width=True)
+        except Exception as e:
+            st.warning(f"Não foi possível gerar os gráficos de DEGRADAÇÃO NO PRAZO: {str(e)}")
     # --- FIM: Análises relacionadas a TÉCNICO ---
 
     # --- INÍCIO: Análises relacionadas a EQUIPAMENTO ---
