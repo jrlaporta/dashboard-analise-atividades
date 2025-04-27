@@ -66,12 +66,14 @@ try:
         st.plotly_chart(fig_prod, use_container_width=True)
 
     # 2. SEM SINAL NO PRAZO por técnico
-    if 'TÉCNICO' in df_final_geral.columns and 'SEM SINAL NO PRAZO ' in df_final_geral.columns:
+    if 'TÉCNICO' in df_final_geral.columns and 'SEM SINAL NO PRAZO ' in df_final_geral.columns and 'I Sintoma' in df_final_geral.columns:
         st.subheader('SEM SINAL NO PRAZO por Técnico')
-        sem_sinal = df_final_geral[['TÉCNICO', 'SEM SINAL NO PRAZO ']].dropna()
+        # Primeiro filtrar por Sem Sinal na coluna I Sintoma
+        sem_sinal_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Sem Sinal', case=False, na=False)]
+        sem_sinal = sem_sinal_total[['TÉCNICO', 'SEM SINAL NO PRAZO ']].dropna()
         sem_sinal = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '].str.strip() != '']
         
-        # Calcular totais por técnico
+        # Calcular totais por técnico (total de Sem Sinal)
         total_por_tecnico = sem_sinal.groupby('TÉCNICO').size().reset_index(name='Total SEM SINAL')
         
         # Gráfico para respostas "Sim"
@@ -115,12 +117,14 @@ try:
         st.plotly_chart(fig_sem_sinal_nao, use_container_width=True)
 
     # 3. DEGRADAÇÃO NO PRAZO por técnico
-    if 'TÉCNICO' in df_final_geral.columns and 'DEGRADAÇÃO NO PRAZO ' in df_final_geral.columns:
+    if 'TÉCNICO' in df_final_geral.columns and 'DEGRADAÇÃO NO PRAZO ' in df_final_geral.columns and 'I Sintoma' in df_final_geral.columns:
         st.subheader('DEGRADAÇÃO NO PRAZO por Técnico')
-        degradacao = df_final_geral[['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']].dropna()
+        # Primeiro filtrar por Degradação na coluna I Sintoma
+        degradacao_total = df_final_geral[df_final_geral['I Sintoma'].str.contains('Degradação', case=False, na=False)]
+        degradacao = degradacao_total[['TÉCNICO', 'DEGRADAÇÃO NO PRAZO ']].dropna()
         degradacao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '].str.strip() != '']
         
-        # Calcular totais por técnico
+        # Calcular totais por técnico (total de Degradação)
         total_por_tecnico = degradacao.groupby('TÉCNICO').size().reset_index(name='Total DEGRADAÇÃO')
         
         # Gráfico para respostas "Sim"
