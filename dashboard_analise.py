@@ -72,22 +72,21 @@ try:
         sem_sinal = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '].str.strip() != '']
         
         # Calcular totais por técnico
-        total_por_tecnico = df_final_geral['TÉCNICO'].value_counts().reset_index()
-        total_por_tecnico.columns = ['TÉCNICO', 'Total Atividades']
+        total_por_tecnico = sem_sinal.groupby('TÉCNICO').size().reset_index(name='Total SEM SINAL')
         
         # Gráfico para respostas "Sim"
         sem_sinal_sim = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Sim']
         sem_sinal_sim_count = sem_sinal_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
         sem_sinal_sim_count = sem_sinal_sim_count.merge(total_por_tecnico, on='TÉCNICO')
-        sem_sinal_sim_count['% Sim'] = 100 * sem_sinal_sim_count['Total Sim'] / sem_sinal_sim_count['Total Atividades']
+        sem_sinal_sim_count['% Sim'] = 100 * sem_sinal_sim_count['Total Sim'] / sem_sinal_sim_count['Total SEM SINAL']
         
-        fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total Atividades',
-                                  text=sem_sinal_sim_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Sim']:.1f}% Sim)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Total de Atividades com % de "Sim"')
+        fig_sem_sinal_sim = px.bar(sem_sinal_sim_count, x='TÉCNICO', y='Total SEM SINAL',
+                                  text=sem_sinal_sim_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                  title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Sim"')
         fig_sem_sinal_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_sem_sinal_sim.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Atividades",
+            yaxis_title="Total de Ocorrências SEM SINAL",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -99,15 +98,15 @@ try:
         sem_sinal_nao = sem_sinal[sem_sinal['SEM SINAL NO PRAZO '] == 'Não']
         sem_sinal_nao_count = sem_sinal_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
         sem_sinal_nao_count = sem_sinal_nao_count.merge(total_por_tecnico, on='TÉCNICO')
-        sem_sinal_nao_count['% Não'] = 100 * sem_sinal_nao_count['Total Não'] / sem_sinal_nao_count['Total Atividades']
+        sem_sinal_nao_count['% Não'] = 100 * sem_sinal_nao_count['Total Não'] / sem_sinal_nao_count['Total SEM SINAL']
         
-        fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total Atividades',
-                                  text=sem_sinal_nao_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Não']:.1f}% Não)", axis=1),
-                                  title='SEM SINAL NO PRAZO - Total de Atividades com % de "Não"')
+        fig_sem_sinal_nao = px.bar(sem_sinal_nao_count, x='TÉCNICO', y='Total SEM SINAL',
+                                  text=sem_sinal_nao_count.apply(lambda row: f"{row['Total SEM SINAL']} ({row['% Não']:.1f}% Não)", axis=1),
+                                  title='SEM SINAL NO PRAZO - Total de Ocorrências com % de "Não"')
         fig_sem_sinal_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_sem_sinal_nao.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Atividades",
+            yaxis_title="Total de Ocorrências SEM SINAL",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -122,22 +121,21 @@ try:
         degradacao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '].str.strip() != '']
         
         # Calcular totais por técnico
-        total_por_tecnico = df_final_geral['TÉCNICO'].value_counts().reset_index()
-        total_por_tecnico.columns = ['TÉCNICO', 'Total Atividades']
+        total_por_tecnico = degradacao.groupby('TÉCNICO').size().reset_index(name='Total DEGRADAÇÃO')
         
         # Gráfico para respostas "Sim"
         degradacao_sim = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Sim']
         degradacao_sim_count = degradacao_sim.groupby('TÉCNICO').size().reset_index(name='Total Sim')
         degradacao_sim_count = degradacao_sim_count.merge(total_por_tecnico, on='TÉCNICO')
-        degradacao_sim_count['% Sim'] = 100 * degradacao_sim_count['Total Sim'] / degradacao_sim_count['Total Atividades']
+        degradacao_sim_count['% Sim'] = 100 * degradacao_sim_count['Total Sim'] / degradacao_sim_count['Total DEGRADAÇÃO']
         
-        fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total Atividades',
-                                   text=degradacao_sim_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Sim']:.1f}% Sim)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Total de Atividades com % de "Sim"')
+        fig_degradacao_sim = px.bar(degradacao_sim_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
+                                   text=degradacao_sim_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Sim']:.1f}% Sim)", axis=1),
+                                   title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Sim"')
         fig_degradacao_sim.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_degradacao_sim.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Atividades",
+            yaxis_title="Total de Ocorrências DEGRADAÇÃO",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
@@ -149,15 +147,15 @@ try:
         degradacao_nao = degradacao[degradacao['DEGRADAÇÃO NO PRAZO '] == 'Não']
         degradacao_nao_count = degradacao_nao.groupby('TÉCNICO').size().reset_index(name='Total Não')
         degradacao_nao_count = degradacao_nao_count.merge(total_por_tecnico, on='TÉCNICO')
-        degradacao_nao_count['% Não'] = 100 * degradacao_nao_count['Total Não'] / degradacao_nao_count['Total Atividades']
+        degradacao_nao_count['% Não'] = 100 * degradacao_nao_count['Total Não'] / degradacao_nao_count['Total DEGRADAÇÃO']
         
-        fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total Atividades',
-                                   text=degradacao_nao_count.apply(lambda row: f"{row['Total Atividades']} ({row['% Não']:.1f}% Não)", axis=1),
-                                   title='DEGRADAÇÃO NO PRAZO - Total de Atividades com % de "Não"')
+        fig_degradacao_nao = px.bar(degradacao_nao_count, x='TÉCNICO', y='Total DEGRADAÇÃO',
+                                   text=degradacao_nao_count.apply(lambda row: f"{row['Total DEGRADAÇÃO']} ({row['% Não']:.1f}% Não)", axis=1),
+                                   title='DEGRADAÇÃO NO PRAZO - Total de Ocorrências com % de "Não"')
         fig_degradacao_nao.update_traces(textposition='outside', textfont=dict(size=ROTULO_TECNICO, family="Arial Black"))
         fig_degradacao_nao.update_layout(
             xaxis_title="Técnico", 
-            yaxis_title="Total de Atividades",
+            yaxis_title="Total de Ocorrências DEGRADAÇÃO",
             xaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             yaxis=dict(tickfont=dict(size=ESCALA_TAMANHO)),
             title_font=dict(size=TITULO_TAMANHO),
